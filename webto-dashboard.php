@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Webto Dashboard
  * Description:       Kontrolpanelet til dit website: overblik over alt indhold, vejledning og support fra Webto.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Requires at least: 6.9
  * Requires PHP:      8.2
  * Author:            Webto
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WEBTO_DASHBOARD_VERSION', '1.1.0' );
+define( 'WEBTO_DASHBOARD_VERSION', '1.1.1' );
 define( 'WEBTO_DASHBOARD_DIR', __DIR__ );
 define( 'WEBTO_DASHBOARD_URL', plugin_dir_url( __FILE__ ) );
 
