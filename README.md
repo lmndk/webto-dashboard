@@ -8,6 +8,12 @@ kontrolpanel; WordPress' rettigheder styrer, hvad hvert kort viser.
   widgets bruges ikke): et kort pr. indholdstype (Sider, Indlæg og alle typer med eget menupunkt, også nye) med antal
   udgivne, kladder/planlagte/venter, de tre seneste ændringer og "Tilføj ...". Desuden **Henvendelser** fra Fluent Forms
   (kun når det er aktivt), **Billeder og filer** (de seneste og HappyFiles' mapper) og kort fra andre plugins.
+- **Toppen** (Lasse 2026-10-13, som Windows 11's låseskærm): et flot billede, der skifter hver hele time, med
+  "Velkommen til dit kontrolpanel", hilsenen, en glasknap "Se hjemmesiden" og et ur med dato i sitets tidszone. Billedet
+  vælges som timer siden 1970 (UTC) modulo antallet, så ALLE installationer viser samme billede i samme time; siden skifter
+  selv ved timeskiftet (`assets/top.js`, serverens ur). Billederne: `assets/baggrunde/<nr>.webp` (2000 px) og
+  `<nr>-1000.webp` (mobil), WebP q78 uden metadata; en anden liste via filteret `webto_dashboard_baggrunde`.
+- Kontrolpanelet fylder hele bredden; fra 1800 px tre kolonner med indhold.
 - Til højre (fra 1280 px; ellers nederst): **Skriv til Webto** og **Vejledning** (kortet kommer fra Webto Vejledning).
   Alt er ét gitter, så hjælpekortene flugter med rækkerne af indholdskort.
 - **Support** i den sorte bjælke: på sitet et panel (`<dialog>`) med "Spørgsmål til denne side" eller "Generelt

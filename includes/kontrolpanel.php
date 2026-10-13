@@ -26,6 +26,7 @@ add_action(
 		}
 		wp_enqueue_style( 'webto-dashboard', WEBTO_DASHBOARD_URL . 'assets/dashboard.css', array( 'dashicons', 'buttons' ), webto_dashboard_asset_version( 'assets/dashboard.css' ) );
 		wp_enqueue_script( 'webto-dashboard-support', WEBTO_DASHBOARD_URL . 'assets/support.js', array(), webto_dashboard_asset_version( 'assets/support.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_enqueue_script( 'webto-dashboard-top', WEBTO_DASHBOARD_URL . 'assets/top.js', array(), webto_dashboard_asset_version( 'assets/top.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 	}
 );
 
@@ -55,6 +56,71 @@ function webto_dashboard_hide_notices(): void {
 	foreach ( array( 'admin_notices', 'all_admin_notices', 'network_admin_notices', 'user_admin_notices' ) as $hook ) {
 		remove_all_actions( $hook );
 	}
+}
+
+/**
+ * Billederne til toppen (assets/baggrunde/<nr>.webp + <nr>-1000.webp), i nummerorden. Filteret
+ * webto_dashboard_baggrunde kan give en anden liste (array af array( 'stor' => url, 'lille' => url )).
+ *
+ * @return array<int, array{stor: string, lille: string}>
+ */
+function webto_dashboard_backgrounds(): array {
+	$out   = array();
+	$files = glob( WEBTO_DASHBOARD_DIR . '/assets/baggrunde/*.webp' ) ?: array();
+	$big   = array_filter( $files, static fn( $f ) => (bool) preg_match( '/\/(\d+)\.webp$/', $f ) );
+	usort( $big, static fn( $a, $b ) => (int) basename( $a ) <=> (int) basename( $b ) );
+	foreach ( $big as $file ) {
+		$name  = basename( $file, '.webp' );
+		$small = is_file( WEBTO_DASHBOARD_DIR . '/assets/baggrunde/' . $name . '-1000.webp' ) ? $name . '-1000.webp' : $name . '.webp';
+		$out[] = array(
+			'stor'  => WEBTO_DASHBOARD_URL . 'assets/baggrunde/' . $name . '.webp?ver=' . webto_dashboard_asset_version( 'assets/baggrunde/' . $name . '.webp' ),
+			'lille' => WEBTO_DASHBOARD_URL . 'assets/baggrunde/' . $small . '?ver=' . webto_dashboard_asset_version( 'assets/baggrunde/' . $small ),
+		);
+	}
+	return array_values( (array) apply_filters( 'webto_dashboard_baggrunde', $out ) );
+}
+
+/**
+ * Hvilket billede der vises nu: det skifter hver hele time, og alle installationer viser det samme billede i samme
+ * time (timer siden 1970, UTC, modulo antallet af billeder). top.js bruger samme regel med serverens ur.
+ *
+ * @param int      $count Antal billeder.
+ * @param int|null $time  Unix-tid (standard: nu).
+ */
+function webto_dashboard_background_index( int $count, ?int $time = null ): int {
+	return $count > 0 ? intdiv( $time ?? time(), HOUR_IN_SECONDS ) % $count : 0;
+}
+
+/**
+ * Toppen af kontrolpanelet: skiftende billede, velkomst, "Se hjemmesiden" og et ur med dato (sitets tidszone).
+ */
+function webto_dashboard_render_top(): void {
+	$images = webto_dashboard_backgrounds();
+	$now    = time();
+	$index  = webto_dashboard_background_index( count( $images ), $now );
+	$tz     = wp_timezone_string();
+	$tz     = preg_match( '#^[A-Za-z_]+(/[A-Za-z_+-]+)*$#', $tz ) ? $tz : 'UTC'; // En fast forskydning (+01:00) kan Intl ikke bruge.
+	?>
+	<header class="wd-hero" data-wd-top data-wd-servertid="<?php echo esc_attr( (string) $now ); ?>" data-wd-tidszone="<?php echo esc_attr( $tz ); ?>">
+		<div class="wd-hero__media" aria-hidden="true">
+			<?php if ( $images ) : ?>
+				<img class="wd-hero__img is-on" src="<?php echo esc_url( $images[ $index ]['lille'] ); ?>" srcset="<?php echo esc_attr( esc_url( $images[ $index ]['lille'] ) . ' 1000w, ' . esc_url( $images[ $index ]['stor'] ) . ' 2000w' ); ?>" sizes="100vw" alt="" decoding="async" fetchpriority="high">
+			<?php endif; ?>
+		</div>
+		<script type="application/json" data-wd-billeder><?php echo wp_json_encode( $images, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES ); ?></script>
+		<div class="wd-hero__inner">
+			<div class="wd-hero__text">
+				<h1 class="wd-hero__title"><?php esc_html_e( 'Velkommen til dit kontrolpanel', 'webto-dashboard' ); ?></h1>
+				<p class="wd-hero__hello"><?php echo esc_html( webto_dashboard_greeting() ); ?></p>
+				<a class="wd-hero__button" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Se hjemmesiden', 'webto-dashboard' ); ?><span class="dashicons dashicons-arrow-right-alt" aria-hidden="true"></span></a>
+			</div>
+			<p class="wd-hero__clock">
+				<time class="wd-hero__time" datetime="<?php echo esc_attr( wp_date( 'c', $now ) ); ?>" data-wd-tid><?php echo esc_html( wp_date( 'H:i', $now ) ); ?></time>
+				<span class="wd-hero__date" data-wd-dato><?php echo esc_html( wp_date( 'l j. F', $now ) ); ?></span>
+			</p>
+		</div>
+	</header>
+	<?php
 }
 
 /**
@@ -118,15 +184,7 @@ function webto_dashboard_render(): void {
 	$cards = webto_dashboard_cards();
 	?>
 	<div class="wrap wd">
-		<div class="wd-head">
-			<div>
-				<h1 class="wd-title"><?php esc_html_e( 'Kontrolpanel', 'webto-dashboard' ); ?></h1>
-				<p class="wd-hello"><?php echo esc_html( webto_dashboard_greeting() ); ?></p>
-			</div>
-			<div class="wd-head__actions">
-				<a class="button" href="<?php echo esc_url( home_url( '/' ) ); ?>"><span class="dashicons dashicons-external" aria-hidden="true"></span><?php esc_html_e( 'Se hjemmesiden', 'webto-dashboard' ); ?></a>
-			</div>
-		</div>
+		<?php webto_dashboard_render_top(); ?>
 		<hr class="wp-header-end">
 
 		<h2 class="screen-reader-text"><?php esc_html_e( 'Dit indhold', 'webto-dashboard' ); ?></h2>

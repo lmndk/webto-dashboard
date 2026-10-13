@@ -13,7 +13,6 @@
 	--wd-border: #dcdcde;
 	--wd-soft: #f6f7f7;
 	--wd-radius: 8px;
-	max-width: 1400px;
 	color: var(--wd-text);
 	font-size: 14px;
 	line-height: 1.5;
@@ -31,16 +30,7 @@
 	color: var(--wd-text);
 }
 
-/* --- Toppen --- */
-.wd-head {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 16px;
-	align-items: flex-end;
-	justify-content: space-between;
-	margin: 8px 0 24px;
-}
-
+/* Overskrift og indledning på undersider (fx Beskeder til Webto). */
 .wd-title {
 	margin: 0;
 	padding: 0;
@@ -55,10 +45,167 @@
 	font-size: 15px;
 }
 
-.wd-head__actions {
+/* --- Toppen: skiftende billede, velkomst, knap og ur (Lasse 2026-10-13: "tænk Windows 11's låseskærm") --- */
+.wd-hero {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	min-height: clamp(280px, 24vw, 400px);
+	/* Samme afstand til toppen som til venstre (WordPress' margen: 10 px på mobil, 22 px fra 782 px). */
+	margin: 10px 0 24px;
+	border-radius: 12px;
+	background: #1d2327;
+	color: #fff;
+}
+
+.wd-hero__media,
+.wd-hero__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.wd-hero__img {
+	object-fit: cover;
+	opacity: 0;
+	transition: opacity 1.4s ease;
+}
+
+.wd-hero__img.is-on {
+	opacity: 1;
+}
+
+/* Et diskret mørkt slør, så teksten kan læses på alle billeder: mørkest bag teksten (venstre og bund) og bag uret. */
+.wd-hero::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background:
+		linear-gradient(90deg, rgb(0 0 0 / 0.55) 0%, rgb(0 0 0 / 0.25) 45%, rgb(0 0 0 / 0.05) 75%),
+		linear-gradient(0deg, rgb(0 0 0 / 0.45) 0%, rgb(0 0 0 / 0) 55%),
+		linear-gradient(225deg, rgb(0 0 0 / 0.35) 0%, rgb(0 0 0 / 0) 40%);
+	pointer-events: none;
+}
+
+.wd-hero__inner {
+	position: relative;
+	z-index: 2;
 	display: flex;
-	flex-wrap: wrap;
+	flex-direction: column-reverse;
+	gap: 24px;
+	justify-content: space-between;
+	box-sizing: border-box;
+	min-height: inherit;
+	padding: 24px 20px;
+}
+
+@media (min-width: 782px) {
+	.wd-hero {
+		margin-top: 22px;
+	}
+
+	.wd-hero__inner {
+		flex-direction: row;
+		align-items: flex-end;
+		padding: 40px;
+	}
+}
+
+/* .wd .wd-hero__title: vejer mere end WordPress' .wrap h1 og .wd h1 (mørk tekst, 23 px, tynd). */
+.wd .wd-hero__title {
+	margin: 0 0 8px;
+	padding: 0;
+	color: #fff;
+	font-size: clamp(26px, 2.6vw, 40px);
+	font-weight: 600;
+	line-height: 1.15;
+	text-shadow: 0 1px 16px rgb(0 0 0 / 0.35);
+}
+
+.wd-hero__hello {
+	max-width: 48ch;
+	margin: 0 0 24px;
+	color: rgb(255 255 255 / 0.92);
+	font-size: 16px;
+	line-height: 1.5;
+	text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+}
+
+/* "Se hjemmesiden": en lys glasknap. */
+.wd-hero__button {
+	display: inline-flex;
 	gap: 8px;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 20px;
+	border: 1px solid rgb(255 255 255 / 0.5);
+	border-radius: 999px;
+	background: rgb(255 255 255 / 0.16);
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	-webkit-backdrop-filter: blur(12px) saturate(140%);
+	backdrop-filter: blur(12px) saturate(140%);
+	transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.wd-hero__button:hover {
+	border-color: rgb(255 255 255 / 0.8);
+	background: rgb(255 255 255 / 0.28);
+	color: #fff;
+}
+
+.wd .wd-hero__button:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: 3px;
+	color: #fff;
+}
+
+.wd-hero__button .dashicons {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 1;
+	transition: transform 0.2s ease;
+}
+
+.wd-hero__button:hover .dashicons {
+	transform: translateX(2px);
+}
+
+.wd-hero__clock {
+	margin: 0;
+	text-shadow: 0 2px 20px rgb(0 0 0 / 0.4);
+}
+
+@media (min-width: 782px) {
+	.wd-hero__clock {
+		align-self: flex-start;
+		text-align: right;
+	}
+}
+
+.wd-hero__time {
+	display: block;
+	font-size: clamp(44px, 5.5vw, 84px);
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: -0.02em;
+	line-height: 1;
+}
+
+.wd-hero__date {
+	display: block;
+	margin-top: 8px;
+	font-size: 16px;
+	font-weight: 500;
+}
+
+.wd-hero__date::first-letter {
+	text-transform: uppercase;
 }
 
 .wd .button {
@@ -118,6 +265,29 @@
 	.wd-grid > .wd-card--help:nth-child(2 of .wd-card--help) {
 		grid-row: 3 / span 2;
 		align-self: start;
+	}
+}
+
+/* Meget brede skærme: tre kolonner med indhold, så kortene ikke bliver unaturligt brede. */
+@media (min-width: 1800px) {
+	.wd-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(360px, 420px);
+	}
+
+	.wd-grid > .wd-card--content:nth-child(3n+1 of .wd-card--content) {
+		grid-column: 1;
+	}
+
+	.wd-grid > .wd-card--content:nth-child(3n+2 of .wd-card--content) {
+		grid-column: 2;
+	}
+
+	.wd-grid > .wd-card--content:nth-child(3n of .wd-card--content) {
+		grid-column: 3;
+	}
+
+	.wd-grid > .wd-card--help {
+		grid-column: 4;
 	}
 }
 
@@ -631,6 +801,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.wd-hero__img,
+	.wd-hero__button,
+	.wd-hero__button .dashicons {
+		transition: none !important;
+	}
+
 	.wd *,
 	.wd-dialog * {
 		transition: none !important;
