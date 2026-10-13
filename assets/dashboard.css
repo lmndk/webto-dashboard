@@ -1,0 +1,738 @@
+/*
+ * Webto Dashboard - kontrolpanelet. WordPress' adminfarve (--wp-admin-theme-color), systemskrift og et 4 px-gitter
+ * (4, 8, 12, 16, 24, 32, 48). Klikflader mindst 44 px, synligt fokus, kontrast mindst 4.5:1. Mobil først:
+ * én kolonne, to fra 600 px, og fra 1280 px tre: indholdskortene i to kolonner og hjælpen (support, vejledning) i den
+ * tredje. Alt er ét gitter, så kortene i hjælpekolonnen flugter med rækkerne af indholdskort (Lasse 2026-10-13).
+ */
+
+.wd {
+	--wd-accent: var(--wp-admin-theme-color, #2271b1);
+	--wd-accent-soft: color-mix(in srgb, var(--wd-accent) 8%, #fff);
+	--wd-text: #1e1e1e;
+	--wd-muted: #50575e;
+	--wd-border: #dcdcde;
+	--wd-soft: #f6f7f7;
+	--wd-radius: 8px;
+	max-width: 1400px;
+	color: var(--wd-text);
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.wd :focus-visible {
+	outline: 2px solid var(--wd-accent);
+	outline-offset: 2px;
+	box-shadow: none;
+}
+
+.wd h1,
+.wd h2,
+.wd h3 {
+	color: var(--wd-text);
+}
+
+/* --- Toppen --- */
+.wd-head {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	align-items: flex-end;
+	justify-content: space-between;
+	margin: 8px 0 24px;
+}
+
+.wd-title {
+	margin: 0;
+	padding: 0;
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.wd-hello {
+	margin: 4px 0 0;
+	color: var(--wd-muted);
+	font-size: 15px;
+}
+
+.wd-head__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.wd .button {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	min-height: 40px;
+	line-height: 1.2;
+}
+
+/* WordPress' knapstil giver ikonet linjehøjde 1.9 (til 20 px-ikoner), så et 18 px-ikon sidder for lavt. */
+.wd .button .dashicons {
+	width: 18px;
+	height: 18px;
+	font-size: 18px;
+	line-height: 1;
+}
+
+/* --- Opbygning: ét gitter --- */
+.wd-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 16px;
+	align-items: stretch;
+}
+
+@media (min-width: 600px) {
+	.wd-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1280px) {
+	.wd-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(320px, 380px);
+	}
+
+	/* Indholdskortene skiftevis i kolonne 1 og 2 (så rækkerne fyldes parvis), hjælpen i kolonne 3:
+	   første hjælpekort over rækkerne 1-2, det næste fra række 3. */
+	.wd-grid > .wd-card--content:nth-child(odd of .wd-card--content) {
+		grid-column: 1;
+	}
+
+	.wd-grid > .wd-card--content:nth-child(even of .wd-card--content) {
+		grid-column: 2;
+	}
+
+	.wd-grid > .wd-card--help {
+		grid-column: 3;
+		grid-row: span 2;
+	}
+
+	.wd-grid > .wd-card--help:nth-child(1 of .wd-card--help) {
+		grid-row: 1 / span 2;
+	}
+
+	.wd-grid > .wd-card--help:nth-child(2 of .wd-card--help) {
+		grid-row: 3 / span 2;
+		align-self: start;
+	}
+}
+
+/* --- Kort --- */
+.wd-card {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	padding: 16px;
+	border: 1px solid var(--wd-border);
+	border-radius: var(--wd-radius);
+	background: #fff;
+}
+
+@media (min-width: 782px) {
+	.wd-card {
+		padding: 24px;
+	}
+}
+
+.wd-card__head {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+	margin: 0 0 16px;
+}
+
+.wd-card__name {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin: 0;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.wd-card__icon {
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 32px;
+	height: 32px;
+	border-radius: 6px;
+	background: var(--wd-accent-soft);
+	color: var(--wd-accent);
+}
+
+.wd-card__all {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	font-size: 13px;
+}
+
+.wd-stat {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 16px;
+	align-items: baseline;
+	margin: 0 0 16px;
+}
+
+.wd-stat__num {
+	font-size: 32px;
+	font-weight: 600;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.wd-stat__label {
+	color: var(--wd-muted);
+}
+
+.wd-stat__more {
+	flex-basis: 100%;
+	color: var(--wd-muted);
+	font-size: 13px;
+}
+
+.wd-stat__more a {
+	color: inherit;
+}
+
+.wd-list {
+	margin: 0 0 16px;
+	padding: 0;
+	border-top: 1px solid var(--wd-border);
+	list-style: none;
+}
+
+.wd-list li {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 44px;
+	margin: 0;
+	padding: 8px 0;
+	border-bottom: 1px solid var(--wd-border);
+}
+
+.wd-list__title {
+	overflow: hidden;
+	min-width: 0;
+	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.wd-list__meta {
+	display: flex;
+	flex: none;
+	gap: 8px;
+	align-items: center;
+	color: var(--wd-muted);
+	font-size: 13px;
+}
+
+.wd-pill {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #f0f0f1;
+	color: #3c434a;
+	font-size: 12px;
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.wd-pill--new {
+	background: #edfaef;
+	color: #00631a;
+}
+
+.wd-pill--future {
+	background: var(--wd-accent-soft);
+	color: var(--wd-accent);
+}
+
+.wd-pill--warn {
+	background: #fcf9e8;
+	color: #614a19;
+}
+
+.wd-card__foot {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-top: auto;
+}
+
+.wd-empty {
+	margin: 0 0 16px;
+	color: var(--wd-muted);
+}
+
+/* Medier: de seneste billeder som små felter. */
+.wd-thumbs {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 8px;
+	margin: 0 0 16px;
+	padding: 0;
+	list-style: none;
+}
+
+.wd-thumbs li {
+	overflow: hidden;
+	margin: 0;
+	border-radius: 4px;
+	background: var(--wd-soft);
+	aspect-ratio: 1;
+}
+
+.wd-thumbs img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.wd-folders {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 16px;
+	padding: 0;
+	list-style: none;
+}
+
+.wd-folders a {
+	display: inline-flex;
+	gap: 4px;
+	align-items: center;
+	min-height: 32px;
+	padding: 4px 12px;
+	border: 1px solid var(--wd-border);
+	border-radius: 999px;
+	color: var(--wd-text);
+	text-decoration: none;
+}
+
+.wd-folders a:hover {
+	border-color: var(--wd-accent);
+	color: var(--wd-accent);
+}
+
+.wd-folders .dashicons {
+	width: 16px;
+	height: 16px;
+	color: var(--wd-muted);
+	font-size: 16px;
+}
+
+/* --- Sidekolonnen: support og vejledning --- */
+.wd-lead {
+	margin: -8px 0 16px;
+	color: var(--wd-muted);
+}
+
+.wd-form {
+	display: grid;
+	gap: 16px;
+	margin: 0;
+}
+
+.wd-fieldset {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.wd-legend,
+.wd-label {
+	display: block;
+	margin: 0 0 8px;
+	padding: 0;
+	font-weight: 600;
+}
+
+.wd-choices {
+	display: grid;
+	gap: 8px;
+}
+
+.wd-choice {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 12px;
+	border: 1px solid var(--wd-border);
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+.wd-choice:has(input:checked) {
+	border-color: var(--wd-accent);
+	background: var(--wd-accent-soft);
+}
+
+.wd-choice input {
+	margin: 0;
+}
+
+.wd-choice__sub {
+	color: var(--wd-muted);
+	font-size: 13px;
+}
+
+.wd textarea,
+.wd select,
+.wd input[type="search"] {
+	box-sizing: border-box;
+	width: 100%;
+	color: var(--wd-text);
+	font-family: inherit;
+	line-height: 1.5;
+	min-height: 44px;
+	padding: 8px 12px;
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.wd textarea {
+	min-height: 120px;
+	resize: vertical;
+}
+
+.wd-file {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+}
+
+.wd-help {
+	display: block;
+	margin-top: 4px;
+	color: var(--wd-muted);
+	font-size: 13px;
+}
+
+.wd-auto {
+	margin: 0;
+	padding: 12px;
+	border-radius: 6px;
+	background: var(--wd-soft);
+	color: var(--wd-muted);
+	font-size: 13px;
+}
+
+.wd-auto summary {
+	cursor: pointer;
+	font-weight: 500;
+}
+
+.wd-auto ul {
+	margin: 8px 0 0;
+	padding-left: 20px;
+	list-style: disc;
+}
+
+.wd-auto li {
+	margin: 2px 0;
+}
+
+.wd-notice {
+	margin: 0;
+	padding: 12px 16px;
+	border-left: 4px solid #dba617;
+	border-radius: 4px;
+	background: #fcf9e8;
+	color: #3c434a;
+}
+
+.wd-card > .wd-notice,
+.wd-dialog__body > [data-wd-formular] > .wd-notice {
+	margin-bottom: 16px;
+}
+
+.wd-notice--ok {
+	border-left-color: #00a32a;
+	background: #edfaef;
+}
+
+.wd-notice strong {
+	display: block;
+}
+
+.wd-send {
+	justify-self: start;
+}
+
+.wd-sub {
+	margin: 24px 0 8px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.wd-search {
+	margin: 0 0 16px;
+}
+
+.wd-links {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.wd-links li {
+	margin: 0;
+}
+
+.wd-links a {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	min-height: 44px;
+	padding: 4px 0;
+	border-bottom: 1px solid var(--wd-border);
+	text-decoration: none;
+}
+
+.wd-links a:hover span {
+	text-decoration: underline;
+}
+
+.wd-links .dashicons {
+	flex: none;
+	color: var(--wd-muted);
+}
+
+.wd-links small {
+	margin-left: auto;
+	color: var(--wd-muted);
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+.wd-start {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	margin: 0 0 16px;
+	padding: 12px 16px;
+	border-radius: 6px;
+	background: var(--wd-accent-soft);
+	color: var(--wd-text);
+	text-decoration: none;
+}
+
+.wd-start strong {
+	display: block;
+	color: var(--wd-accent);
+}
+
+.wd-start:hover strong {
+	text-decoration: underline;
+}
+
+/* --- Support-panelet på sitet (<dialog>, samme opbygning som Vejledning-panelet) --- */
+.wd-dialog {
+	--wd-accent: var(--wp-admin-theme-color, #2271b1);
+	--wd-accent-soft: color-mix(in srgb, var(--wd-accent) 8%, #fff);
+	--wd-text: #1e1e1e;
+	--wd-muted: #50575e;
+	--wd-border: #dcdcde;
+	--wd-soft: #f6f7f7;
+	position: fixed;
+	inset: 0 0 0 auto;
+	box-sizing: border-box;
+	width: min(480px, 100vw);
+	max-width: 100vw;
+	height: 100%;
+	max-height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: #fff;
+	color: var(--wd-text);
+	box-shadow: -8px 0 32px rgb(0 0 0 / 0.18);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.wd-dialog[open] {
+	display: flex;
+	flex-direction: column;
+}
+
+.wd-dialog::backdrop {
+	background: rgb(0 0 0 / 0.35);
+}
+
+.wd-dialog__head {
+	display: flex;
+	gap: 12px;
+	align-items: center;
+	justify-content: space-between;
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--wd-border);
+}
+
+.wd-dialog__title {
+	margin: 0;
+	font-family: inherit;
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+
+.wd-dialog__title:focus {
+	outline: none;
+}
+
+/* Sitets tema kan have sin egen .button og overskriftsskrift; panelet skal se ens ud på ethvert tema. */
+.wd-dialog .button,
+.wd-dialog label,
+.wd-dialog legend,
+.wd-dialog textarea {
+	font-family: inherit;
+	letter-spacing: normal;
+	text-transform: none;
+}
+
+.wd-dialog .button {
+	min-height: 40px;
+	font-size: 13px;
+	font-weight: 400;
+	white-space: normal;
+}
+
+.wd-dialog .button:hover {
+	transform: none;
+}
+
+.wd-dialog__body {
+	flex: 1;
+	overflow-y: auto;
+	padding: 20px;
+}
+
+.wd-dialog .wd-form {
+	gap: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wd *,
+	.wd-dialog * {
+		transition: none !important;
+	}
+}
+
+/* --- Skjult er skjult (også når en komponent ellers sætter display) --- */
+.wd [hidden],
+.wd-dialog [hidden] {
+	display: none !important;
+}
+
+/* --- Vedhæftning: det rigtige filfelt er usynligt, knappen er dets label --- */
+.wd-file {
+	position: relative;
+}
+
+.wd-file__input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	opacity: 0;
+}
+
+.wd-file__input:focus-visible + label {
+	outline: 2px solid var(--wd-accent);
+	outline-offset: 2px;
+}
+
+.wd-file__name {
+	overflow: hidden;
+	max-width: 100%;
+	color: var(--wd-text);
+	font-weight: 500;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.wd .button-link {
+	min-height: 44px;
+	padding: 0 4px;
+	color: #b32d2e;
+}
+
+.wd-dialog__after {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 16px 0 0;
+}
+
+[data-wd-resultat]:focus {
+	outline: none;
+}
+
+[data-wd-resultat]:not(:empty) {
+	margin-bottom: 16px;
+}
+
+/* --- Beskeder til Webto --- */
+.wd--messages {
+	max-width: 900px;
+}
+
+.wd-back {
+	margin: 8px 0 8px;
+}
+
+.wd-back a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+}
+
+.wd--messages .wd-title {
+	margin-bottom: 16px;
+}
+
+.wd--messages .wd-hello {
+	margin: -8px 0 16px;
+}
+
+.wd-message__meta {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	margin: 0 0 16px;
+	color: var(--wd-muted);
+}
+
+.wd-message__text {
+	margin: 0 0 16px;
+	font-size: 15px;
+	line-height: 1.6;
+}
+
+.wd-info th {
+	width: 140px;
+	font-weight: 600;
+}
+
+.wd-info td {
+	word-break: break-word;
+}
