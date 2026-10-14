@@ -51,8 +51,8 @@
 	isolation: isolate;
 	overflow: hidden;
 	min-height: clamp(280px, 24vw, 400px);
-	/* Samme afstand til toppen som til venstre (WordPress' margen: 10 px på mobil, 22 px fra 782 px). */
-	margin: 10px 0 24px;
+	/* 22 px til toppen på alle skærme (Lasse 2026-10-14); 16 px ned til genvejene, som mellem kortene. */
+	margin: 22px 0 16px;
 	border-radius: 12px;
 	background: #1d2327;
 	color: #fff;
@@ -102,10 +102,6 @@
 }
 
 @media (min-width: 782px) {
-	.wd-hero {
-		margin-top: 22px;
-	}
-
 	.wd-hero__inner {
 		flex-direction: row;
 		align-items: flex-end;
@@ -222,6 +218,263 @@
 	height: 18px;
 	font-size: 18px;
 	line-height: 1;
+}
+
+/* --- Genveje: én række under toppen, der glider til siden, når der ikke er plads (Lasse 2026-10-14) --- */
+.wd-genveje {
+	position: relative;
+	margin: 0 0 16px;
+}
+
+.wd-genveje__liste {
+	display: flex;
+	gap: 12px;
+	overflow-x: auto;
+	/* Plads til fokusrammen (en rullende liste klipper alt, der stikker ud). */
+	margin: -4px;
+	padding: 4px;
+	list-style: none;
+	scroll-padding-inline: 4px;
+	scroll-snap-type: x proximity;
+	scrollbar-width: none;
+	overscroll-behavior-x: contain;
+}
+
+.wd-genveje__liste::-webkit-scrollbar {
+	display: none;
+}
+
+/* Ens bredder, når de er plads til alle; ellers så brede som deres indhold, og rækken glider. */
+.wd-genvej {
+	display: flex;
+	flex: 1 0 0;
+	min-width: max-content;
+	margin: 0;
+	border: 1px solid var(--wd-border);
+	border-radius: var(--wd-radius);
+	background: #fff;
+	scroll-snap-align: start;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.wd-genvej:hover,
+.wd-genvej:focus-within {
+	border-color: color-mix(in srgb, var(--wd-accent) 45%, var(--wd-border));
+	box-shadow: 0 2px 8px rgb(0 0 0 / 0.06);
+}
+
+.wd-genvej__link {
+	display: flex;
+	flex: 1;
+	gap: 12px;
+	align-items: center;
+	min-height: 60px;
+	padding: 0 20px 0 14px;
+	border-radius: var(--wd-radius);
+	color: var(--wd-text);
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.25;
+	text-decoration: none;
+}
+
+.wd-genvej__link:hover,
+.wd-genvej__link:focus {
+	color: var(--wd-accent);
+}
+
+.wd-genvej__ikon {
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 32px;
+	height: 32px;
+	border-radius: 6px;
+	background: var(--wd-accent-soft);
+	color: var(--wd-accent);
+	font-size: 18px;
+}
+
+.wd-genvej__tekst {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+}
+
+.wd-genvej__under {
+	overflow: hidden;
+	max-width: 220px;
+	font-size: 12px;
+	font-weight: 400;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* "+" (opret ny) i genvejens højre side. */
+.wd-genvej__ny {
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 48px;
+	border-left: 1px solid var(--wd-border);
+	border-radius: 0 var(--wd-radius) var(--wd-radius) 0;
+	color: var(--wd-muted);
+	text-decoration: none;
+}
+
+.wd-genvej__ny:hover,
+.wd-genvej__ny:focus {
+	background: var(--wd-accent-soft);
+	color: var(--wd-accent);
+}
+
+.wd-genvej__link:has(+ .wd-genvej__ny) {
+	border-radius: var(--wd-radius) 0 0 var(--wd-radius);
+}
+
+/* Fortsæt hvor du slap: den første, i adminfarven. */
+.wd-genvej--fortsaet {
+	border-color: var(--wd-accent);
+	background: var(--wd-accent);
+}
+
+.wd-genvej--fortsaet:hover,
+.wd-genvej--fortsaet:focus-within {
+	border-color: color-mix(in srgb, var(--wd-accent) 85%, #000);
+	background: color-mix(in srgb, var(--wd-accent) 85%, #000);
+}
+
+.wd-genvej--fortsaet .wd-genvej__link,
+.wd-genvej--fortsaet .wd-genvej__link:hover,
+.wd-genvej--fortsaet .wd-genvej__link:focus {
+	color: #fff;
+}
+
+.wd-genvej--fortsaet .wd-genvej__ikon {
+	background: rgb(255 255 255 / 0.18);
+	color: #fff;
+}
+
+.wd-genvej--fortsaet .wd-genvej__under {
+	color: rgb(255 255 255 / 0.88);
+}
+
+/* Det lille kryds i hjørnet (skjul, til brugeren gemmer noget andet). 28 px - over WCAG's 24 px, men mindre end vores
+   sædvanlige 44 px, fordi det skal være diskret (Lasse 2026-10-14: "et lille kryds oppe i hjørnet"). */
+.wd-genvej:has(.wd-genvej__skjul) {
+	position: relative;
+}
+
+.wd-genvej:has(.wd-genvej__skjul) .wd-genvej__link {
+	padding-right: 40px;
+}
+
+.wd-genvej__skjul {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	margin: 0;
+}
+
+.wd-genvej__kryds {
+	display: grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: transparent;
+	color: rgb(255 255 255 / 0.8);
+	cursor: pointer;
+}
+
+.wd-genvej__kryds .dashicons {
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+}
+
+.wd-genvej__kryds:hover,
+.wd-genvej__kryds:focus-visible {
+	background: rgb(255 255 255 / 0.2);
+	color: #fff;
+}
+
+.wd .wd-genvej__kryds:focus-visible {
+	outline-color: #fff;
+	outline-offset: 0;
+}
+
+/* Pilene og den bløde kant: kun i den retning, der er flere genveje (assets/genveje.js). */
+.wd-genveje::before,
+.wd-genveje::after {
+	content: "";
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	bottom: 0;
+	width: 72px;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+
+.wd-genveje::before {
+	left: 0;
+	background: linear-gradient(to right, #f0f0f1 30%, rgb(240 240 241 / 0));
+}
+
+.wd-genveje::after {
+	right: 0;
+	background: linear-gradient(to left, #f0f0f1 30%, rgb(240 240 241 / 0));
+}
+
+.wd-genveje.har-foer::before,
+.wd-genveje.har-efter::after {
+	opacity: 1;
+}
+
+.wd-genveje__pil {
+	position: absolute;
+	z-index: 2;
+	top: 50%;
+	display: grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 1px solid var(--wd-border);
+	border-radius: 50%;
+	background: #fff;
+	box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+	color: var(--wd-text);
+	cursor: pointer;
+	transform: translateY(-50%);
+}
+
+.wd-genveje__pil[hidden] {
+	display: none;
+}
+
+.wd-genveje__pil:hover {
+	border-color: var(--wd-accent);
+	color: var(--wd-accent);
+}
+
+.wd-genveje__pil--tilbage {
+	left: 4px;
+}
+
+.wd-genveje__pil--frem {
+	right: 4px;
+}
+
+/* Touch: man swiper, så ingen pile (den bløde kant viser stadig, at der er mere). */
+@media (hover: none) {
+	.wd-genveje__pil {
+		display: none;
+	}
 }
 
 /* --- Opbygning: ét gitter --- */
@@ -911,4 +1164,215 @@
 
 .wd-info td {
 	word-break: break-word;
+}
+
+/* --- Webto -> Synlighed (kun for Webto, Lasse 2026-10-14) --- */
+.wd-webto {
+	max-width: 1100px;
+}
+
+.wd-webto__head {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	align-items: flex-start;
+	justify-content: space-between;
+	margin: 22px 0 16px;
+}
+
+/* Genvejene til afsnittene: står fast under admin bar, mens man ruller (Lasse 2026-10-14). */
+.wd-webto__nav {
+	position: sticky;
+	z-index: 3;
+	top: 32px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 -8px 16px;
+	padding: 8px;
+	border-bottom: 1px solid var(--wd-border);
+	background: #f0f0f1;
+}
+
+@media (max-width: 782px) {
+	.wd-webto__nav {
+		top: 46px;
+	}
+}
+
+/* Under 600 px ruller admin bar med siden; genvejene bliver på én linje og kan skubbes til siden. */
+@media (max-width: 600px) {
+	.wd-webto__nav {
+		top: 0;
+		flex-wrap: nowrap;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.wd-webto__jump {
+		flex: none;
+	}
+}
+
+.wd-webto__jump {
+	display: inline-flex;
+	gap: 8px;
+	align-items: center;
+	min-height: 44px;
+	padding: 0 16px;
+	border: 1px solid var(--wd-border);
+	border-radius: 999px;
+	background: #fff;
+	color: var(--wd-text);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.wd-webto__jump:hover,
+.wd-webto__jump:focus {
+	border-color: var(--wd-accent);
+	color: var(--wd-accent);
+}
+
+.wd-webto__antal {
+	color: #614a19;
+	font-size: 12px;
+	font-weight: 400;
+}
+
+.wd-webto__antal:not(:empty) {
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: #fcf9e8;
+}
+
+/* Et afsnit, man springer til, lander under admin bar og genvejene. */
+.wd-s {
+	scroll-margin-top: 104px;
+}
+
+@media (max-width: 782px) {
+	.wd-s {
+		scroll-margin-top: 118px;
+	}
+}
+
+.wd-webto__help {
+	margin: 0 0 24px;
+	padding-left: 20px;
+	color: var(--wd-muted);
+	list-style: disc;
+}
+
+.wd-webto__help li {
+	margin: 4px 0;
+}
+
+.wd-webto__form {
+	display: grid;
+	gap: 16px;
+}
+
+.wd-s .wd-card__name {
+	margin: 0 0 4px;
+}
+
+.wd-s-lead {
+	margin: 0 0 8px;
+	color: var(--wd-muted);
+}
+
+.wd-s-table {
+	overflow-x: auto;
+}
+
+.wd-s-table table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.wd-s-table th,
+.wd-s-table td {
+	padding: 8px 12px 8px 0;
+	border-bottom: 1px solid var(--wd-border);
+	text-align: left;
+	vertical-align: middle;
+}
+
+.wd-s-table thead th {
+	color: var(--wd-muted);
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.wd-s-table tbody th {
+	font-weight: 400;
+}
+
+.wd-s-table td:nth-child(2) {
+	width: 190px;
+}
+
+.wd-s-table select {
+	width: 100%;
+	min-height: 36px;
+}
+
+.wd-s-name {
+	display: block;
+	font-weight: 600;
+}
+
+.wd-s-sub .wd-s-name {
+	padding-left: 20px;
+	font-weight: 400;
+}
+
+.wd-s-note {
+	display: block;
+	color: var(--wd-muted);
+	font-size: 12px;
+}
+
+.wd-s-sub .wd-s-note {
+	padding-left: 20px;
+}
+
+.wd-s-default {
+	width: 140px;
+	color: var(--wd-muted);
+	font-size: 12px;
+}
+
+.wd-s-table tr.wd-s-group th {
+	padding-top: 20px;
+	color: var(--wd-muted);
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.wd-s-locked {
+	color: var(--wd-muted);
+	font-size: 13px;
+}
+
+/* Skjulte rækker skiller sig ud, så man kan se på et øjeblik, hvad kunden ikke ser. */
+.wd-s-table tr.is-skjult > * {
+	background: #fcf9e8;
+}
+
+.wd-webto__actions {
+	/* Siden er lang: Gem står altid nederst på skærmen. */
+	position: sticky;
+	z-index: 2;
+	bottom: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 -8px;
+	padding: 12px 8px;
+	border-top: 1px solid var(--wd-border);
+	background: #f0f0f1;
 }

@@ -27,6 +27,7 @@ add_action(
 		wp_enqueue_style( 'webto-dashboard', WEBTO_DASHBOARD_URL . 'assets/dashboard.css', array( 'dashicons', 'buttons' ), webto_dashboard_asset_version( 'assets/dashboard.css' ) );
 		wp_enqueue_script( 'webto-dashboard-support', WEBTO_DASHBOARD_URL . 'assets/support.js', array(), webto_dashboard_asset_version( 'assets/support.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 		wp_enqueue_script( 'webto-dashboard-top', WEBTO_DASHBOARD_URL . 'assets/top.js', array(), webto_dashboard_asset_version( 'assets/top.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
+		wp_enqueue_script( 'webto-dashboard-genveje', WEBTO_DASHBOARD_URL . 'assets/genveje.js', array(), webto_dashboard_asset_version( 'assets/genveje.js' ), array( 'in_footer' => true, 'strategy' => 'defer' ) );
 	}
 );
 
@@ -124,29 +125,13 @@ function webto_dashboard_render_top(): void {
 }
 
 /**
- * Hilsenen efter tidspunktet på dagen.
+ * Hilsenen i toppen: altid "Hej <navn>." (Lasse 2026-10-14: ikke godmorgen/godnat, intet komma).
  */
 function webto_dashboard_greeting(): string {
-	$hour = (int) wp_date( 'G' );
 	$user = wp_get_current_user();
 	$name = '' !== trim( (string) $user->first_name ) ? $user->first_name : $user->display_name;
-	if ( $hour < 5 ) {
-		/* translators: %s: navn */
-		$text = __( 'God nat, %s.', 'webto-dashboard' );
-	} elseif ( $hour < 10 ) {
-		/* translators: %s: navn */
-		$text = __( 'God morgen, %s.', 'webto-dashboard' );
-	} elseif ( $hour < 12 ) {
-		/* translators: %s: navn */
-		$text = __( 'God formiddag, %s.', 'webto-dashboard' );
-	} elseif ( $hour < 18 ) {
-		/* translators: %s: navn */
-		$text = __( 'God eftermiddag, %s.', 'webto-dashboard' );
-	} else {
-		/* translators: %s: navn */
-		$text = __( 'God aften, %s.', 'webto-dashboard' );
-	}
-	return sprintf( $text, $name ) . ' ' . __( 'Her er overblikket over din hjemmeside.', 'webto-dashboard' );
+	/* translators: %s: navn */
+	return sprintf( __( 'Hej %s.', 'webto-dashboard' ), $name ) . ' ' . __( 'Her er overblikket over din hjemmeside.', 'webto-dashboard' );
 }
 
 /**
@@ -186,6 +171,7 @@ function webto_dashboard_render(): void {
 	<div class="wrap wd">
 		<?php webto_dashboard_render_top(); ?>
 		<hr class="wp-header-end">
+		<?php webto_dashboard_render_shortcuts(); ?>
 
 		<h2 class="screen-reader-text"><?php esc_html_e( 'Dit indhold', 'webto-dashboard' ); ?></h2>
 		<div class="wd-grid">

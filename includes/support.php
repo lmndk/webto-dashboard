@@ -178,7 +178,7 @@ add_filter(
 			return $cards;
 		}
 		$result = isset( $_GET['wd_support'] ) ? sanitize_key( wp_unslash( $_GET['wd_support'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$html   = '<p class="wd-lead">' . esc_html__( 'Spørgsmål, fejl eller ønsker? Vi svarer på din mail.', 'webto-dashboard' ) . '</p>';
+		$html   = '<p class="wd-lead">' . esc_html__( 'Spørgsmål, fejl eller ønsker? Opret en support ticket her.', 'webto-dashboard' ) . '</p>';
 		$html  .= '<div data-wd-resultat>' . ( in_array( $result, array( 'sendt', 'ikke-sendt' ), true ) ? webto_dashboard_result_html( $result ) : '' ) . '</div>';
 		if ( 'fejl' === $result ) {
 			$html .= '<div class="wd-notice" role="alert">' . esc_html( (string) get_transient( 'webto_dashboard_fejl_' . get_current_user_id() ) ?: __( 'Beskeden kunne ikke sendes. Prøv igen.', 'webto-dashboard' ) ) . '</div>';

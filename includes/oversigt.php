@@ -139,7 +139,7 @@ function webto_dashboard_type_card( WP_Post_Type $type ): array {
 					'pending' => __( 'Venter', 'webto-dashboard' ),
 					'private' => __( 'Privat', 'webto-dashboard' ),
 				);
-				$meta   = ( isset( $labels[ $post->post_status ] ) ? webto_dashboard_pill( $labels[ $post->post_status ] ) : '' ) . esc_html( webto_dashboard_when( (int) get_post_modified_time( 'U', true, $post ) ) );
+				$meta   = ( isset( $labels[ $post->post_status ] ) ? webto_dashboard_pill( $labels[ $post->post_status ] ) : '' ) . esc_html( webto_dashboard_when( (int) get_post_timestamp( $post, 'modified' ) ) );
 			}
 			$html .= '<li><a class="wd-list__title" href="' . esc_url( (string) $link ) . '">' . esc_html( $title ) . '</a><span class="wd-list__meta">' . $meta . '</span></li>';
 		}
