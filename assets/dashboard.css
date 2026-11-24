@@ -497,7 +497,8 @@
 	}
 
 	/* Indholdskortene skiftevis i kolonne 1 og 2 (så rækkerne fyldes parvis), hjælpen i kolonne 3:
-	   første hjælpekort over rækkerne 1-2, det næste fra række 3. */
+	   første hjælpekort over rækkerne 1-2, det næste fra række 3. Hjælpekortene er kun så høje som deres indhold
+	   (ellers strækkes de til to rækkers højde og står med et stort tomt felt). */
 	.wd-grid > .wd-card--content:nth-child(odd of .wd-card--content) {
 		grid-column: 1;
 	}
@@ -509,6 +510,7 @@
 	.wd-grid > .wd-card--help {
 		grid-column: 3;
 		grid-row: span 2;
+		align-self: start;
 	}
 
 	.wd-grid > .wd-card--help:nth-child(1 of .wd-card--help) {
@@ -517,7 +519,6 @@
 
 	.wd-grid > .wd-card--help:nth-child(2 of .wd-card--help) {
 		grid-row: 3 / span 2;
-		align-self: start;
 	}
 }
 

@@ -92,7 +92,8 @@ Kunden ser hverken menupunktet eller siderne, heller ikke som administrator. Iko
 `webto-dashboard.php` (indgang, rettighed, indholdstypen `webto_support`) og `includes/`: `oversigt.php`,
 `kontrolpanel.php`, `genveje.php`, `webto.php` (menupunktet Webto, Se som kunde), `synlighed.php`, `support.php`,
 `adminbar.php`. `assets/dashboard.css` (kontrolpanel, beskeder og
-panelet), `assets/support.js`, `assets/top.js` (billede og ur), `assets/genveje.js` (pilene) og `assets/blokke.js` (blokke i editoren). `skitse/` er den godkendte skitse (2026-10-13) og skal ikke med i en udgivelse.
+panelet), `assets/support.js`, `assets/top.js` (billede og ur), `assets/genveje.js` (pilene) og `assets/blokke.js` (blokke i editoren). `skitse/` er den godkendte skitse (2026-10-13) og skal ikke med i en udgivelse. `.htaccess` spærrer
+`.md`-filer og skjulte filer for besøgende (Apache/LiteSpeed; på nginx kræver det en regel i serveren).
 
 ## Test
 `hb/tests/t-dashboard.js` (44 tjek), `t-dashboard-top.js` (14), `t-dashboard-genveje.js` (24), `t-webto-synlighed.js`
