@@ -81,6 +81,9 @@ function webto_dashboard_visibility_defaults(): array {
 				'core/html', 'core/freeform', 'core/shortcode', 'core/legacy-widget', 'core/widget-group',
 				// SEOPress: den gamle FAQ og det, Webto sætter op.
 				'wpseopress/faq-block', 'wpseopress/sitemap', 'wpseopress/preferred-source',
+				// Rank Math (Lasse 2026-11-25): FAQ bliver (giver Google FAQ-data); indholdsfortegnelse, HowTo og
+				// Schema-blokken er skjult.
+				'rank-math/toc-block', 'rank-math/howto-block', 'rank-math/rich-snippet',
 				// Indlejr: tjenester, danske sites sjældent bruger (YouTube, Vimeo, X, Bluesky, Spotify, SoundCloud,
 				// TikTok og Pinterest bliver; Facebook og Instagram vises ikke i blokvælgeren af WordPress selv).
 				'core/embed/animoto', 'core/embed/cloudup', 'core/embed/crowdsignal', 'core/embed/dailymotion',
@@ -723,7 +726,7 @@ function webto_dashboard_visibility_page(): void {
 							$groups[ $parts[0] ][ (string) $name ] = (string) $title;
 						}
 					}
-					$labels = array( 'webto' => 'Webto', 'core' => 'WordPress', 'kadence' => 'Kadence', 'kadence-conversions' => 'Kadence Conversions', 'fluentfom' => 'Fluent Forms', 'fluentform' => 'Fluent Forms', 'wpseopress' => 'SEOPress', 'happyfiles' => 'HappyFiles', 'acf' => 'ACF' );
+					$labels = array( 'webto' => 'Webto', 'core' => 'WordPress', 'kadence' => 'Kadence', 'kadence-conversions' => 'Kadence Conversions', 'fluentfom' => 'Fluent Forms', 'fluentform' => 'Fluent Forms', 'rank-math' => 'Rank Math', 'wpseopress' => 'SEOPress', 'happyfiles' => 'HappyFiles', 'acf' => 'ACF' );
 					uksort( $groups, static fn( $a, $b ) => array( array_search( $a, array_keys( $labels ), true ) === false ? 99 : array_search( $a, array_keys( $labels ), true ), $a ) <=> array( array_search( $b, array_keys( $labels ), true ) === false ? 99 : array_search( $b, array_keys( $labels ), true ), $b ) );
 					foreach ( $groups as $ns => $blocks ) {
 						asort( $blocks, SORT_NATURAL | SORT_FLAG_CASE );

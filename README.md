@@ -45,7 +45,8 @@ Kunden ser hverken menupunktet eller siderne, heller ikke som administrator. Iko
   stylet - Kadences Række-layout/Sektion, Knapper (Adv), Harmonika, Faner og Ikon; WordPress' Overskrift, Afsnit,
   Billede, Tabel, Galleri, Afstandsstykke, Søg, Medie & tekst; temaets Hero; Fluent Forms. Desuden skjult: skabelonblokke
   (titel, dato, kommentarer, logo, navigation ...), Tilpasset HTML, Klassisk, Shortcode, widgets, Kadences formularer,
-  sidehoved/navigation og udviklerblokke, SEOPress' gamle FAQ, Sitemap og Preferred Sources.
+  sidehoved/navigation og udviklerblokke, Rank Maths Indholdsfortegnelse, HowTo og Schema (FAQ bliver), og fra
+  ældre sites SEOPress' gamle FAQ, Sitemap og Preferred Sources.
   Varianter (fx **Indlejr** -> YouTube, Vimeo, X) står som underpunkter med nøglen `blok/variant` (`core/embed/youtube`);
   en skjult variant mister kun pladsen i blokvælgeren. Standard: de sjældne indlejringer (Animoto, Cloudup, Scribd,
   Wolfram ...) er skjult for kunder; YouTube, Vimeo, X, Bluesky, Spotify, SoundCloud, TikTok og Pinterest vises.
