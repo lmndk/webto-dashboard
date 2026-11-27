@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Webto Dashboard
  * Description:       Kontrolpanelet til dit website: overblik over alt indhold, vejledning og support fra Webto.
- * Version:           1.2.3
+ * Version:           1.3.0
  * Requires at least: 6.9
  * Requires PHP:      8.2
  * Author:            Webto
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WEBTO_DASHBOARD_VERSION', '1.2.3' );
+define( 'WEBTO_DASHBOARD_VERSION', '1.3.0' );
 define( 'WEBTO_DASHBOARD_DIR', __DIR__ );
 define( 'WEBTO_DASHBOARD_URL', plugin_dir_url( __FILE__ ) );
 
@@ -32,8 +32,10 @@ define( 'WEBTO_DASHBOARD_URL', plugin_dir_url( __FILE__ ) );
  *                     "Dine beskeder til Webto" (gemmes på sitet, så intet går tabt).
  *   opdatering.php    Opdateringer fra GitHub (automatisk; aldrig for kildekoden i skabelonen).
  *   adminbar.php      Knappen "Support" i adminbaren og panelet på sitet (kun for brugere, der er logget ind).
+ *   logbog.php        Logbogen: hvad er lavet, hvornår, af hvem og hvordan (skriver sig selv + AI'ens noter), Webto -> Logbog.
+ *   overblik.php      Ability webto/overblik: det, en AI kalder først, når den forbinder til sitet.
  */
-foreach ( array( 'oversigt', 'kontrolpanel', 'genveje', 'webto', 'synlighed', 'support', 'adminbar', 'opdatering' ) as $webto_dashboard_file ) {
+foreach ( array( 'oversigt', 'kontrolpanel', 'genveje', 'webto', 'synlighed', 'support', 'adminbar', 'opdatering', 'logbog', 'overblik' ) as $webto_dashboard_file ) {
 	require_once WEBTO_DASHBOARD_DIR . '/includes/' . $webto_dashboard_file . '.php';
 }
 unset( $webto_dashboard_file );

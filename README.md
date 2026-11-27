@@ -59,6 +59,21 @@ Kunden ser hverken menupunktet eller siderne, heller ikke som administrator. Iko
   til den røde knap i bjælken slår det fra. `webto_dashboard_sees_as_webto()` er falsk imens (også Webto Vejledning
   via `webto_vejledning_er_webto`), men Webto-siden kan stadig åbnes.
 
+- **Logbog** (`admin.php?page=webto-logbog`, Lasse 2026-11-25): hvad er lavet på sitet, hvornår, af hvem og hvordan
+  (`includes/logbog.php`, tabellen `{prefix}webto_logbog`). Skriver sig selv: sider/indlæg/blokgrupper/megamenu-paneler
+  (oprettet, ændret, udgivet, papirkurv, slettet), uploads, menuer, plugins/tema/WordPress (slået til/fra, opdateret),
+  vigtige indstillinger (navn, forside, synlighed, header builderen, logo, menupladser, Rank Math, Synlighed) og
+  brugere. Kilden: `ai` (kald til `/mcp/` eller `/wp-abilities/` = Novamira), `wp-cli`, `automatisk` (cron),
+  `wp-admin`, `sitet`. Samme ændring af samme bruger inden for 15 min = én linje med antal. AI'en skriver én linje pr.
+  opgave med ability `webto/log` (eller `wp webto log "..."`). Læses med `webto/logbog`, `wp webto logbog` og i
+  overblikket. Linjer ældre end 2 år slettes dagligt. Base-imaget starter med en tom logbog.
+
+## Til AI'en: webto/overblik (Lasse 2026-11-25)
+Ability `webto/overblik` (`includes/overblik.php`, også `wp webto overblik`): det en AI kalder FØRST - sitet (udvikling
+eller live, webshop, oversættelse), forældre-/undertema (+ UNIKT.md og forældede egne skabeloner), plugins,
+Novamiras hukommelse, de seneste 25 linjer i logbogen, hvad der mangler (header, vejledning, SEO, undertema) med den
+skill, der hjælper, og temaernes skills. Bruger temaets og Webto Vejlednings funktioner, når de findes.
+
 ## Support
 - Til `support@webto.dk` (filter `webto_dashboard_support_til`) med kundens mail som Reply-To. Emnet:
   `Support fra <site>: <starten af beskeden>`.
